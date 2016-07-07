@@ -1,6 +1,8 @@
+import functools
 import getpass
 import http.cookiejar
 import json
+import operator
 import time
 import urllib
 from urllib import request, parse
@@ -138,6 +140,15 @@ def play_video(dtoken, other_info, duration, job_id, clazz_id, object_id, user_i
         playing_time += interval
 
 
+def clazz_info_cmp(x, y):
+    x_labels = x['label'].split('.')
+    y_labels = y['label'].split('.')
+    for i in range(0, len(x_labels)):
+        if operator.ne(x_labels[i], y_labels[i]):
+            return int(x_labels[i]) - int(y_labels[i])
+    return 0
+
+
 cj = http.cookiejar.LWPCookieJar()
 cookie_support = request.HTTPCookieProcessor(cj)
 opener = request.build_opener(cookie_support, request.HTTPHandler)
@@ -172,7 +183,7 @@ if __name__ == '__main__':
     clazz_info = [elem for elem in clazz_info if elem['layer'] != 1]
 
     # 根据标签排序
-    clazz_info.sort(key=lambda x: x['label'])
+    clazz_info.sort(key=functools.cmp_to_key(clazz_info_cmp))
     print('\n课程内容：')
     for index, item in enumerate(clazz_info):
         print('%d) %s %s' % (index, item['label'], item['name']))
