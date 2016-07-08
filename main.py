@@ -167,7 +167,7 @@ if __name__ == '__main__':
 用户名：\t%s
 电话：\t\t%s
 邮箱：\t\t%s
-    ''' % (user_info['schoolname'], user_info['name'], user_info['uname'], user_info['phone'], user_info['email']))
+        ''' % (user_info['schoolname'], user_info['name'], user_info['uname'], user_info['phone'], user_info['email']))
     subjects = get_subjects()
     print('课程列表：')
     for index, subject in enumerate(subjects):
@@ -213,3 +213,6 @@ if __name__ == '__main__':
 
         print('开始模拟播放 %s %s' % (knowledge['label'], knowledge['name']))
         play_video(dtoken, other_info, duration, job_id, clazz_id, object_id, user_id)
+
+    # 退出提示
+    input('操作完成，按回车键退出')
