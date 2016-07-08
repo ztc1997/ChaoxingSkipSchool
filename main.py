@@ -143,7 +143,8 @@ def play_video(dtoken, other_info, duration, job_id, clazz_id, object_id, user_i
 def clazz_info_cmp(x, y):
     x_labels = x['label'].split('.')
     y_labels = y['label'].split('.')
-    for i in range(0, len(x_labels)):
+    stop = min(len(x_labels), len(y_labels))
+    for i in range(stop):
         if x_labels[i] != y_labels[i]:
             return int(x_labels[i]) - int(y_labels[i])
     return 0
