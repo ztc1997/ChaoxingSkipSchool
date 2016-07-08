@@ -2,7 +2,6 @@ import functools
 import getpass
 import http.cookiejar
 import json
-import operator
 import time
 import urllib
 from urllib import request, parse
@@ -140,19 +139,22 @@ def play_video(dtoken, other_info, duration, job_id, clazz_id, object_id, user_i
         playing_time += interval
 
 
+# 排序cmp，按照小数点分割label，靠前的数字优先排序
 def clazz_info_cmp(x, y):
     x_labels = x['label'].split('.')
     y_labels = y['label'].split('.')
     for i in range(0, len(x_labels)):
-        if operator.ne(x_labels[i], y_labels[i]):
+        if x_labels[i] != y_labels[i]:
             return int(x_labels[i]) - int(y_labels[i])
     return 0
 
 
+# cookie处理器
 cj = http.cookiejar.LWPCookieJar()
 cookie_support = request.HTTPCookieProcessor(cj)
 opener = request.build_opener(cookie_support, request.HTTPHandler)
 request.install_opener(opener)
+
 if __name__ == '__main__':
     username = input('请输入用户名： ')
     password = getpass.getpass('请输入密码（不显示输入）： ')
