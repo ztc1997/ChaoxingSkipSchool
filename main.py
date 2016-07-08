@@ -189,7 +189,7 @@ if __name__ == '__main__':
         print('%d) %s %s' % (index, item['label'], item['name']))
 
     num = input_int('输入标题编号，本工具从此开始刷课： ', len(clazz_info))
-    for i in range(num, len(clazz_info) - 1):
+    for i in range(num, len(clazz_info)):
         knowledge = clazz_info[i]
         card_id = get_card_id(knowledge['id'])
         user_id = user_info['puid']
