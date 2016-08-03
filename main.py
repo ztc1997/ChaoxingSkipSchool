@@ -1,3 +1,4 @@
+# coding=utf-8
 import functools
 import getpass
 import http.cookiejar
@@ -161,14 +162,17 @@ if __name__ == '__main__':
     password = getpass.getpass('请输入密码（不显示输入）： ')
     print('正在加载...')
     user_info = login(username, password)
-    print('''
-账户基本信息：
-学校：\t\t%s
-名称：\t\t%s
-用户名：\t%s
-电话：\t\t%s
-邮箱：\t\t%s
-        ''' % (user_info['schoolname'], user_info['name'], user_info['uname'], user_info['phone'], user_info['email']))
+    print('登陆成功，账户基本信息：')
+    if 'schoolname' in user_info:
+        print('学校：\t\t%s' % user_info['schoolname'])
+    if 'name' in user_info:
+        print('名称：\t\t%s' % user_info['name'])
+    if 'uname' in user_info:
+        print('用户名：\t%s' % user_info['uname'])
+    if 'phone' in user_info:
+        print('电话：\t\t%s' % user_info['phone'])
+    if 'email' in user_info:
+        print('邮箱：\t\t%s' % user_info['email'])
     subjects = get_subjects()
     print('课程列表：')
     for index, subject in enumerate(subjects):
