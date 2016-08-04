@@ -8,6 +8,7 @@ import urllib
 from urllib import request, parse
 
 import chaoxing_enc
+from killable_thread import KillableThread
 
 HEADERS = {
     'User-Agent': 'Dalvik/1.6.0 (Linux; U; Android 4.1.2; sdk Build/MASTER) ChaoXingStudy_3_1.4_android_phone_5',
@@ -126,18 +127,33 @@ def input_int(hint, max_value):
 def play_video(dtoken, other_info, duration, job_id, clazz_id, object_id, user_id):
     interval = 10
     playing_time = 0
-    first_report_url = chaoxing_enc.chaoxin_video_report_url(dtoken, other_info, playing_time, duration, job_id,
-                                                             clazz_id, object_id, user_id, 3)
-    http_request_get(first_report_url)
+    report_video_playing_time(dtoken, other_info, duration, job_id, clazz_id, object_id, playing_time, user_id, 3)
     time.sleep(interval + 5)
     playing_time += (interval + 5)
     while playing_time <= duration:
-        report_url = chaoxing_enc.chaoxin_video_report_url(dtoken, other_info, playing_time, duration, job_id,
-                                                           clazz_id, object_id, user_id, 0)
-        http_request_get(report_url)
+        report_video_playing_time(dtoken, other_info, duration, job_id, clazz_id, object_id, playing_time, user_id, 0)
         print('已播放: %d / 总长: %d' % (playing_time, duration))
         time.sleep(interval)
         playing_time += interval
+
+
+report_video_thread = None
+
+
+# 向服务器报告播放时间
+def report_video_playing_time(dtoken, other_info, duration, job_id, clazz_id, object_id, playing_time, user_id,
+                              is_drag):
+    global report_video_thread
+
+    report_url = chaoxing_enc.chaoxin_video_report_url(dtoken, other_info, playing_time, duration, job_id,
+                                                       clazz_id, object_id, user_id, is_drag)
+
+    # 如果上次请求还未结束，则强制结束
+    if report_video_thread is not None and report_video_thread.is_alive():
+        report_video_thread.kill()
+
+    report_video_thread = KillableThread(target=http_request_get, args=(report_url,))
+    report_video_thread.start()
 
 
 # 排序cmp，按照小数点分割label，靠前的数字优先排序
